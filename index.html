@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDb Movie Rating Finder</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        input { padding: 10px; margin: 10px; width: 300px; }
+        button { padding: 10px; cursor: pointer; }
+        #result { margin-top: 20px; font-size: 18px; font-weight: bold; }
+    </style>
+</head>
+<body style="background-color: #f5c518;">
+    <h1>IMDb Movie Rating Finder</h1>
+    <input type="text" id="movieName" placeholder="Enter movie name">
+    <button style="color: #f5c518; background-color: black; border-radius: 50%; width: 130px;"  onclick="getMovieRating()">Get Rating</button>
+    <div id="result"></div>
+
+    <script>
+        async function getMovieRating() {
+            const movieName = document.getElementById("movieName").value;
+            if (!movieName) {
+                alert("Please enter a movie name");
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/get-rating?movie=${encodeURIComponent(movieName)}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    document.getElementById("result").innerText = "Movie not found!";
+                } else {
+                    document.getElementById("result").innerText = `Title: ${data.title}, IMDb Rating: ${data.rating}`;
+                }
+            } catch (error) {
+                document.getElementById("result").innerText = "Error fetching data";
+            }
+        }
+    </script>
+</body>
+</html>
